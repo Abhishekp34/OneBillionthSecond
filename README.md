@@ -1,8 +1,8 @@
-#Billionth Second Calculator
+**Billionth Second Calculator**
 
 A simple web application that calculates the exact date and time when a person will reach (or has reached) their 1 billionth second of existence based on their birth date and time.
 
-Features:
+**Features:**
 
 Input fields for day, month, year, hour, minute, and AM/PM.
 
@@ -11,21 +11,21 @@ Calculates the exact timestamp of the 1 billionth second.
 Displays the result dynamically.
 
 
-Technology Stack
+**Technology Stack**
 
 Backend: Python (Flask)
 
 Frontend: HTML, CSS
 
-Installation and Setup
+**Installation and Setup**
 
-Prerequisites
+**Prerequisites**
 
 Python 3.6+
 
 pip (Python package manager)
 
-Steps to Run Locally
+**Steps to Run Locally**
 
 Clone the Repository
 
