@@ -19,13 +19,17 @@ HTML_TEMPLATE = """
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
+            background-image: url('https://source.unsplash.com/random/1920x1080/?space');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #ffffff;
         }
         .form-container {
-            background: #ffffff;
+            background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
         h2 {
