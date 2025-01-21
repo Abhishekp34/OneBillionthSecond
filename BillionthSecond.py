@@ -19,50 +19,57 @@ HTML_TEMPLATE = """
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
+            background-color: #2c3e50; /* Darker background color */
+            color: #ffffff;
         }
         .form-container {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: #34495e; /* Slightly lighter box color */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             text-align: center;
+            max-width: 500px;
+            width: 100%;
         }
         h2 {
             margin-bottom: 20px;
+            color: #ecf0f1; /* Light text color for better readability */
         }
         form {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
         }
         .input-group {
             display: flex;
             gap: 10px;
             justify-content: center;
+            flex-wrap: nowrap; /* Prevent wrapping */
         }
         .input-group input, .input-group select {
-            width: 60px;
-            padding: 5px;
+            width: 60px;  /* Adjust width for all fields */
+            padding: 8px;
             font-size: 14px;
             text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #95a5a6;
+            border-radius: 6px;
         }
-        select {
-            width: 80px;
+        .time-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         button {
-            padding: 10px;
+            padding: 12px;
             font-size: 16px;
-            background-color: #007BFF;
+            background-color: #3498db; /* Button blue */
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #2980b9;
         }
         .result {
             margin-top: 20px;
@@ -70,11 +77,11 @@ HTML_TEMPLATE = """
         .reset {
             margin-top: 10px;
             text-decoration: underline;
-            color: #007BFF;
+            color: #3498db;
             cursor: pointer;
         }
         .reset:hover {
-            color: #0056b3;
+            color: #2980b9;
         }
     </style>
 </head>
@@ -86,6 +93,8 @@ HTML_TEMPLATE = """
                 <input type="text" name="day" placeholder="DD" maxlength="2" required>
                 <input type="text" name="month" placeholder="MM" maxlength="2" required>
                 <input type="text" name="year" placeholder="YYYY" maxlength="4" required>
+            </div>
+            <div class="time-group">
                 <input type="text" name="hour" placeholder="HH" maxlength="2" required>
                 <input type="text" name="minute" placeholder="MM" maxlength="2" required>
                 <select name="ampm">
