@@ -19,11 +19,11 @@ HTML_TEMPLATE = """
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #2c3e50; /* Darker background color */
+            background-color: #2c3e50;
             color: #ffffff;
         }
         .form-container {
-            background: #34495e; /* Slightly lighter box color */
+            background: #34495e;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
@@ -33,7 +33,7 @@ HTML_TEMPLATE = """
         }
         h2 {
             margin-bottom: 20px;
-            color: #ecf0f1; /* Light text color for better readability */
+            color: #ecf0f1;
         }
         form {
             display: flex;
@@ -44,25 +44,19 @@ HTML_TEMPLATE = """
             display: flex;
             gap: 10px;
             justify-content: center;
-            flex-wrap: nowrap; /* Prevent wrapping */
         }
         .input-group input, .input-group select {
-            width: 60px;  /* Adjust width for all fields */
+            width: 60px;
             padding: 8px;
             font-size: 14px;
             text-align: center;
             border: 1px solid #95a5a6;
             border-radius: 6px;
         }
-        .time-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
         button {
             padding: 12px;
             font-size: 16px;
-            background-color: #3498db; /* Button blue */
+            background-color: #3498db;
             color: white;
             border: none;
             border-radius: 6px;
@@ -84,6 +78,32 @@ HTML_TEMPLATE = """
             color: #2980b9;
         }
     </style>
+    <script>
+        function startCountdown(targetTime) {
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = targetTime - now;
+
+                if (distance > 0) {
+                    const years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
+                    const months = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
+                    const days = Math.floor((distance % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    document.getElementById("countdown").innerText = 
+                        `${years} years, ${months} months, ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
+                } else {
+                    document.getElementById("countdown").innerText = "Your 1 billionth second has already passed!";
+                    clearInterval(timer);
+                }
+            }
+
+            const timer = setInterval(updateCountdown, 1000);
+            updateCountdown();
+        }
+    </script>
 </head>
 <body>
     <div class="form-container">
@@ -93,8 +113,6 @@ HTML_TEMPLATE = """
                 <input type="text" name="day" placeholder="DD" maxlength="2" required>
                 <input type="text" name="month" placeholder="MM" maxlength="2" required>
                 <input type="text" name="year" placeholder="YYYY" maxlength="4" required>
-            </div>
-            <div class="time-group">
                 <input type="text" name="hour" placeholder="HH" maxlength="2" required>
                 <input type="text" name="minute" placeholder="MM" maxlength="2" required>
                 <select name="ampm">
@@ -104,10 +122,15 @@ HTML_TEMPLATE = """
             </div>
             <button type="submit">Calculate</button>
         </form>
-        {% if result %}
+        {% if result and target_time %}
         <div class="result">
             <h3>Your 1 billionth second is:</h3>
             <p>{{ result }}</p>
+            <h3>Time remaining (live):</h3>
+            <p id="countdown"></p>
+            <script>
+                startCountdown({{ target_time }});
+            </script>
         </div>
         <a class="reset" href="/">Enter another date and time</a>
         {% endif %}
@@ -139,7 +162,13 @@ def calculate():
         birthdate = datetime(year, month, day, hour, minute)
         billionth_second = birthdate + timedelta(seconds=10**9)
 
-        return render_template_string(HTML_TEMPLATE, result=billionth_second)
+        # Format billionth second as DD-MM-YYYY HH:MM
+        formatted_billionth_second = billionth_second.strftime("%d-%m-%Y %H:%M")
+
+        # Convert billionth second to a timestamp for JavaScript
+        target_time = int(billionth_second.timestamp() * 1000)
+
+        return render_template_string(HTML_TEMPLATE, result=formatted_billionth_second, target_time=target_time)
     except Exception as e:
         return f"<h3>Error: {str(e)}</h3><p>Make sure all inputs are correct.</p>"
 
