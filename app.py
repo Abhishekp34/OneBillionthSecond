@@ -1,44 +1,74 @@
 from flask import Flask, request, render_template
+import logging
 from datetime import datetime, timedelta
+import pytz
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
+# Configure logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(message)s')
+
+
+@app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template('billionth_second_calculator.html')
+
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
     try:
-        day = int(request.form.get('day'))
-        month = int(request.form.get('month'))
-        year = int(request.form.get('year'))
-        hour = int(request.form.get('hour'))
-        minute = int(request.form.get('minute'))
+        # Retrieve form data with validation
+        day = request.form.get('day')
+        month = request.form.get('month')
+        year = request.form.get('year')
+        hour = request.form.get('hour')
+        minute = request.form.get('minute')
         ampm = request.form.get('ampm')
 
-        # Adjust hour based on AM/PM
-        if ampm == "PM" and hour != 12:
+        # Validate form fields
+        if not all([day, month, year, hour, minute, ampm]):
+            raise ValueError("All form fields are required.")
+
+        day = int(day)
+        month = int(month)
+        year = int(year)
+        hour = int(hour)
+        minute = int(minute)
+
+        # Validate the hour
+        if hour < 1 or hour > 12:
+            raise ValueError("Hour must be between 1 and 12.")
+
+        # Convert to 24-hour format if necessary
+        if ampm == 'PM' and hour != 12:
             hour += 12
-        elif ampm == "AM" and hour == 12:
+        elif ampm == 'AM' and hour == 12:
             hour = 0
 
-        birthdate = datetime(year, month, day, hour, minute)
-        billionth_second = birthdate + timedelta(seconds=10**9)
+        # Create the birth datetime object with timezone
+        birth_datetime = datetime(year, month, day, hour, minute, tzinfo=pytz.UTC)
 
-        # Format billionth second as DD-MM-YYYY HH:MM
-        formatted_billionth_second = billionth_second.strftime("%d-%m-%Y %H:%M")
+        # Calculate the 1 billionth second
+        billionth_second_date = birth_datetime + timedelta(seconds=10**9)
 
-        # Convert billionth second to a timestamp for JavaScript
-        target_time = int(billionth_second.timestamp() * 1000)
+        # Calculate the age in seconds
+        now = datetime.now(pytz.UTC)
+        age_in_seconds = int((now - birth_datetime).total_seconds())
 
         return render_template(
-            "index.html",
-            result=formatted_billionth_second,
-            target_time=target_time
+            'billionth_second_calculator.html',
+            result=billionth_second_date.strftime("%d-%m-%Y %H:%M"),
+            target_time=int(billionth_second_date.timestamp() * 1000),
+            birth_time=int(birth_datetime.timestamp() * 1000),
+            age_in_seconds=age_in_seconds
         )
     except Exception as e:
-        return f"<h3>Error: {str(e)}</h3><p>Make sure all inputs are correct.</p>"
+        logging.exception("An error occurred during calculation.")
+        return render_template(
+            'billionth_second_calculator.html',
+            details=str(e)
+        )
+
 
 if __name__ == '__main__':
     app.run(debug=True)
