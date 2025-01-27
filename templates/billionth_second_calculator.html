@@ -88,23 +88,19 @@
                 const distance = targetTime - now;
                 const ageInSeconds = Math.floor((now - birthTime) / 1000);
 
-                // Update countdown
                 if (distance > 0) {
-                    const years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
-                    const months = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
-                    const days = Math.floor((distance % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                     document.getElementById("countdown").innerText = 
-                        `${years} years, ${months} months, ${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
+                        `${days} days, ${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
                 } else {
                     document.getElementById("countdown").innerText = "Your 1 billionth second has already passed!";
                     clearInterval(timer);
                 }
 
-                // Update age
                 document.getElementById("age").innerText = `${ageInSeconds.toLocaleString()} seconds old`;
             }
 
@@ -131,6 +127,12 @@
             </div>
             <button type="submit">Calculate</button>
         </form>
+        {% if error %}
+        <div class="result" style="color: #ff6b6b;">
+            <h3>Error:</h3>
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
         {% if result and target_time and birth_time %}
         <div class="result">
             <h3>Your 1 billionth second is:</h3>
