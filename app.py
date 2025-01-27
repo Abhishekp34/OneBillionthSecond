@@ -39,14 +39,21 @@ def calculate():
         if hour < 1 or hour > 12:
             raise ValueError("Hour must be between 1 and 12.")
 
+        # Validate the date
+        try:
+            birth_datetime = datetime(year, month, day, hour, minute)
+        except ValueError as e:
+            raise ValueError("Invalid date or time.")
+
         # Convert to 24-hour format if necessary
         if ampm == 'PM' and hour != 12:
             hour += 12
         elif ampm == 'AM' and hour == 12:
             hour = 0
 
-        # Create the birth datetime object with timezone
-        birth_datetime = datetime(year, month, day, hour, minute, tzinfo=pytz.UTC)
+        # Create the birth datetime object with local timezone and convert to UTC
+        local_tz = pytz.timezone('UTC')  # Replace with the user's timezone if known
+        birth_datetime = local_tz.localize(datetime(year, month, day, hour, minute)).astimezone(pytz.UTC)
 
         # Calculate the 1 billionth second
         billionth_second_date = birth_datetime + timedelta(seconds=10**9)
@@ -66,7 +73,7 @@ def calculate():
         logging.exception("An error occurred during calculation.")
         return render_template(
             'billionth_second_calculator.html',
-            details=str(e)
+            error=str(e)
         )
 
 
