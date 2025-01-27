@@ -3,82 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1 Billionth Second Calculator</title>
+    <title>Find Your Billionth Second</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #34495e, #2c3e50);
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: #ffffff;
         }
+
         .form-container {
-            background: rgba(52, 73, 94, 0.9);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
             text-align: center;
-            max-width: 500px;
-            width: 100%;
+            max-width: 750px;
+            width: 250%;
+            animation: fadeIn 1s ease-in-out;
         }
+
         h2 {
-            margin-bottom: 15px;
-            color: #ecf0f1;
-            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
+
         h4 {
             margin-bottom: 20px;
-            color: #bdc3c7;
+            font-size: 1.2rem;
+            color: #e0e0e0;
         }
+
         form {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
+
         .input-group {
             display: flex;
             gap: 10px;
             justify-content: center;
         }
+
         .input-group input, .input-group select {
-            width: 60px;
-            padding: 8px;
-            font-size: 14px;
-            text-align: center;
-            border: 1px solid #95a5a6;
-            border-radius: 6px;
-        }
-        button {
+            width: 80px;
             padding: 12px;
             font-size: 16px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #3498db;
+            transform: scale(1.05);
+            outline: none;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
             background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
+
         button:hover {
             background-color: #2980b9;
+            transform: translateY(-3px);
         }
+
         .result {
-            margin-top: 20px;
+            margin-top: 30px;
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 15px;
+            animation: slideIn 0.5s ease-in-out;
         }
+
+        .result h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #ffffff;
+        }
+
+        .result p {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+        }
+
         .reset {
-            margin-top: 10px;
-            text-decoration: underline;
+            margin-top: 20px;
+            text-decoration: none;
             color: #3498db;
+            font-size: 1rem;
             cursor: pointer;
+            transition: color 0.3s;
         }
+
         .reset:hover {
             color: #2980b9;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Background Animation */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10.01%);
+            background-size: 20px 20px;
+            animation: moveBackground 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveBackground {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-200px);
+            }
         }
     </style>
     <script>
@@ -88,11 +173,12 @@
                 const distance = targetTime - now;
                 const ageInSeconds = Math.floor((now - birthTime) / 1000);
 
-                // Update countdown
                 if (distance > 0) {
+                    // Calculate years, months, days, hours, minutes, and seconds
                     const years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365));
-                    const months = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
-                    const days = Math.floor((distance % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+                    const remainingDays = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
+                    const months = Math.floor(remainingDays / 30);
+                    const days = remainingDays % 30;
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -104,7 +190,6 @@
                     clearInterval(timer);
                 }
 
-                // Update age
                 document.getElementById("age").innerText = `${ageInSeconds.toLocaleString()} seconds old`;
             }
 
@@ -115,7 +200,7 @@
 </head>
 <body>
     <div class="form-container">
-        <h2>1 Billionth Second Calculator</h2>
+        <h2>Find Your Billionth Second</h2>
         <h4>Enter your birth date and time</h4>
         <form action="/calculate" method="post">
             <div class="input-group">
@@ -131,6 +216,12 @@
             </div>
             <button type="submit">Calculate</button>
         </form>
+        {% if error %}
+        <div class="result" style="color: #ff6b6b;">
+            <h3>Error:</h3>
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
         {% if result and target_time and birth_time %}
         <div class="result">
             <h3>Your 1 billionth second is:</h3>
