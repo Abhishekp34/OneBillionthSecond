@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import logging
 from datetime import datetime, timedelta
 import pytz
+import os
 
 app = Flask(__name__)
 
@@ -78,4 +79,4 @@ def calculate():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
